@@ -14,6 +14,8 @@ const Canvas = () => {
     const [width , setWidth] = useState();
     const [name , setName] = useState();
     const [dataFromModal, setDataFromModal] = useState();
+    const [penWidth , setPenWidth] = useState(3);
+    const [fabricCanvas , setFabricCanvas] = useState();
 
     const handleModalData = (data) => {
         setDataFromModal(data);
@@ -54,10 +56,14 @@ const Canvas = () => {
             // width: `${canvasArea.width}`,
             // height: `${canvasArea.height}`,
             isDrawingMode: true,
+            // selection:true,
+            // selectionColor: 'yellow',
+            // selectionLineWidth:3,
+            
         
         })
-        console.log(width)
-            console.log(height)
+
+        setFabricCanvas(canvas);
 
         const circle = new fabric.Circle({
             radius: 50,
@@ -72,15 +78,19 @@ const Canvas = () => {
 
     },[dataFromModal])
 
+    const changePenWidth = (width) =>{
+        if(fabricCanvas){
+            fabricCanvas.freeDrawingBrush.width = width;
+            setPenWidth(width);
+            fabricCanvas.renderAll.bind(fabricCanvas);
+        }
+    }
+
     
 
     return (
         <div className='container mx-auto bg-black h-screen text-purple-700'>
-            
-            
-
-            {/* <NewProjectModal></NewProjectModal> */}
-            
+           
             <Modal sendDataToCanvas={handleModalData}></Modal>
             <div>
                 <h3 className="font-bold text-3xl text-center py-5
@@ -88,43 +98,11 @@ const Canvas = () => {
                 {/* <canvas ></canvas> */}
                 <canvas className=" " ref={canvasRef}></canvas>
             </div>
-            {/* <div>
-                <form onSubmit={handleSubmit(onSubmit) }>
-                    <div className="card-body">
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Name</span>
-                            </label>
-                            <input className=' text-input input-bordered w-full max-w-xs bg-white  rounded' defaultValue="" placeholder=" name here" {...register("name", { required: true })} type="text" />
-                {errors.exampleRequired && <span>This field is required</span>}
-                        </div>
-                        
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Height</span>
-                            </label>
-                            <input {...register("height", { required: true })} type="number" placeholder="Height" className="input input-bordered" />
-                            {errors.exampleRequired && <span>This field is required</span>}
-
-                        </div>
-
-                        <div className="form-control">
-                            <label className="label">
-                                <span className="label-text">Width</span>
-                            </label>
-                            <input {...register("width", { required: true })} type="number" placeholder="width" className="input input-bordered" />
-                            {errors.exampleRequired && <span>This field is required</span>}
-
-                        </div>
-
-                        
-
-                        <div className="form-control mt-6">
-                            <button className="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
-                </form> 
-            </div> */}
+            <div>
+                <label htmlFor="Pen WIdth - "></label>
+                <input type="range" onChange={e=> changePenWidth(e.target.value)} value={penWidth} min={1} max={30} />
+            </div>
+            
         </div>
     );
 };
